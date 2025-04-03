@@ -120,7 +120,7 @@ export default function Registration({ savedData }) {
           <b>Guardian Phone Number:</b> {guardian_phone_number}
         </div>
         <hr className={`my-2 ${classes.lineColor}`} />
-        <div className={`col-md-12 ${classes.fontSize1}`}>
+        <div className={`col-md-12 mb-3 ${classes.fontSize1}`}>
           <b>Guardian Email:</b> {guardian_email}
         </div>
       </div>

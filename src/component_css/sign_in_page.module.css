@@ -101,6 +101,12 @@
     font-size: 1.05rem;
     margin: 0;
 }
+@media (max-width: 600px) {
+    .fontSize1 {
+        font-size: 0.8rem;
+        margin: 0;
+    }
+}
 .fontSize2 {
     font-size: 0.8rem;
 }
@@ -111,6 +117,14 @@
     border: green solid 2px !important;
     border-radius: 1rem;
     padding: 2rem 0;
+}
+.smallSpinner {
+    width: 1rem;  /* Adjust width */
+    height: 1rem; /* Adjust height */
+}
+.errorMessage {
+    color: red;
+    font-size: 0.8rem;
 }
 @media (max-width: 840px) {
     .box {

@@ -10,6 +10,9 @@ export default function Form1({ submisssion, getData }) {
   const [listOfCountry, setListOfCountry] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [buttonColor, setButtonColor] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
+  const [submitErrorMes, setSubmitErrorMes] = useState("");
 
   const [formData, setFormData] = useState({
     surname: "",
@@ -317,6 +320,8 @@ export default function Form1({ submisssion, getData }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevents the brouser from clearing the fields after submission
+    setSubmitted(true);
+    setSubmitError(false);
 
     // Validation Logic
     const newValidation = {
@@ -375,6 +380,13 @@ export default function Form1({ submisssion, getData }) {
     // Check if form is valid
     try {
       if (Object.values(newValidation).every((isValid) => isValid)) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => {
+          controller.abort();
+          setSubmitted(false);
+          setSubmitError(true); // Shows us an Error below the submit button
+          setSubmitErrorMes("Unable to submit data. Please try again."); // Error Message
+        }, 20000);
         // API endpoint for the form.
         // Do not use '/registration' as your end point [If you must go to vite.config.js file and comment out the server field before building]
         const response = await fetch("/registration", {
@@ -383,20 +395,20 @@ export default function Form1({ submisssion, getData }) {
         });
         // Response data must have identical fields to that of the request and must all be strings.
         // The file URL location of the file(image) in the CDN must be returned
+        clearTimeout(timeout);
         if (!response) {
-          throw new Error("Error submitting data");
+          //throw new Error("Error submitting data");
+          setSubmitError(true); // Shows us an Error below the submit button
+          setSubmitErrorMes("Unable to submit data. Please try again."); // Error Message
         }
         const data = await response.json();
-        //alert("Form submitted successfully!");
-        //console.log(data);
         getData(data);
         submisssion(true);
       } else {
-        alert("Please fill out all required fields.");
+        alert("Please fill out all required fields."); // this is basically useless 😂
       }
     } catch (error) {
       console.error("Error submittiong data:", error);
-      alert("Oops! Error submittiong data");
     }
   };
 
@@ -702,6 +714,7 @@ export default function Form1({ submisssion, getData }) {
               <option>{local}</option>
             ))}
           </select>
+          <div className="valid-feedback">Good!</div>
           <div className="invalid-feedback">
             Please select a local government!
           </div>
@@ -964,8 +977,20 @@ export default function Form1({ submisssion, getData }) {
             }  w-100`}
             type="submit"
           >
-            Submit
+            {!submitted ? (
+              "Submit"
+            ) : (
+              <div
+                class={`spinner-border text-success ${classes.smallSpinner}`}
+                role="status"
+              ></div>
+            )}
           </button>
+          {submitError && (
+            <div className={` col-12 ${classes.errorMessage}`}>
+              {submitErrorMes}
+            </div>
+          )}
         </div>
       </form>
     </>
@@ -992,6 +1017,9 @@ residential_address (String)
 religion (String)
 state_of_residence (String)
 local_government_of_residence (String)
+guardian_name (String)
+guardian_phone_number (String)
+guardian_email (String)
 suggestion (String)
 file (Image)
 */

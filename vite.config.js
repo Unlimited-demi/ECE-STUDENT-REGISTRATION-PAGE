@@ -7,7 +7,7 @@ export default defineConfig({
     proxy: {
       "/registration": {
         // Keep "/registration" in frontend
-        target: "http://localhost:5555", // Change to match your backend URL
+        target: "http://localhost:6559", // Change to match your backend URL
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/registration/, "/register"), // ✅ Corrects path
       },
