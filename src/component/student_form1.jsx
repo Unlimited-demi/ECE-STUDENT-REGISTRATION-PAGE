@@ -415,7 +415,7 @@ export default function Form1({ submisssion, getData }) {
   // Components
   return (
     <>
-      <div className="fs-5 mt-2 mb-4">Personal Information</div>
+      <div className="fs-5 mt-2 mb-4">Student Information</div>
       {/* FORM FIELDS */}
       <form className={`row g-3 mb-5`} onSubmit={handleSubmit}>
         {/* Surname */}
