@@ -30,6 +30,9 @@ export default function Form1({ submisssion, getData }) {
     religion: "",
     state_of_residence: "",
     local_government_of_residence: "",
+    guardian_name: "",
+    guardian_phone_number: "",
+    guardian_email: "",
     suggestion: "",
     file: null,
   });
@@ -53,6 +56,9 @@ export default function Form1({ submisssion, getData }) {
     religion: false,
     state_of_residence: false,
     local_government_of_residence: false,
+    guardian_name: false,
+    guardian_phone_number: false,
+    guardian_email: false,
     suggestion: false,
     file: false,
   });
@@ -163,6 +169,13 @@ export default function Form1({ submisssion, getData }) {
       state_of_residence: formData.state_of_residence !== "",
       local_government_of_residence:
         formData.local_government_of_residence !== "",
+      guardian_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.guardian_name),
+      guardian_phone_number:
+        /^[0-9]{10,15}$/.test(formData.guardian_phone_number) ||
+        /^[+]+[0-9]{10,15}$/.test(formData.guardian_phone_number),
+      guardian_email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        formData.guardian_email
+      ),
       suggestion:
         formData.suggestion.trim().length >= 3 &&
         formData.suggestion.trim().length <= 300,
@@ -339,6 +352,13 @@ export default function Form1({ submisssion, getData }) {
       state_of_residence: formData.state_of_residence !== "",
       local_government_of_residence:
         formData.local_government_of_residence !== "",
+      guardian_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.guardian_name),
+      guardian_phone_number:
+        /^[0-9]{10,15}$/.test(formData.guardian_phone_number) ||
+        /^[+]+[0-9]{10,15}$/.test(formData.guardian_phone_number),
+      guardian_email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        formData.guardian_email
+      ),
       suggestion:
         formData.suggestion.trim().length >= 3 &&
         formData.suggestion.trim().length <= 300,
@@ -832,6 +852,63 @@ export default function Form1({ submisssion, getData }) {
           <div className="invalid-feedback">
             Please select a local government!
           </div>
+        </div>
+
+        {/* Guardian Name */}
+        <div className="col-md-4">
+          <label htmlFor="validationGuardianname" className="form-label">
+            Guardian Name
+          </label>
+          <input
+            name="guardian_name"
+            type="text"
+            className={`form-control ${
+              validation.guardian_name ? "is-valid" : "is-invalid"
+            }`}
+            id="validationGuardianname"
+            onChange={handleChange}
+            required
+          />
+          <div className="valid-feedback">Good!</div>
+          <div className="invalid-feedback">Invalid guardian name!</div>
+        </div>
+
+        {/* Guardian Phone Number */}
+        <div className="col-md-4">
+          <label htmlFor="validationGuardianPhone" className="form-label">
+            Guardian Phone Number
+          </label>
+          <input
+            name="guardian_phone_number"
+            type="tel"
+            className={`form-control ${
+              validation.guardian_phone_number ? "is-valid" : "is-invalid"
+            }`}
+            id="validationGuardianPhone"
+            onChange={handleChange}
+            required
+          />
+          <div className="valid-feedback">Good!</div>
+          <div className="invalid-feedback">Invalid guardian phone Number!</div>
+        </div>
+
+        {/* Guardian Email */}
+        <div className="col-md-4">
+          <label htmlFor="validationGuardianEmail" className="form-label">
+            Guardian Email
+          </label>
+          <input
+            name="guardian_email"
+            type="email"
+            className={`form-control ${
+              validation.guardian_email ? "is-valid" : "is-invalid"
+            }`}
+            id="validationGuardianEmail"
+            onChange={handleChange}
+            required
+          />
+          <div className="valid-feedback">Good!</div>
+          <div className="invalid-feedback">Invalid guardian email!</div>
         </div>
 
         {/* Image Upload */}

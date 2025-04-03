@@ -14,7 +14,7 @@ export default function RegForm() {
     <>
       <div className="container pb-5 px-5">
         <div className="container d-flex flex-column align-items-center mb-4 mt-3">
-          <div className="d-flex px-0 mb-4">
+          <div className={`d-flex px-0 mb-4`}>
             <img
               className={`${classes.logo}`}
               src={myImage}
@@ -27,12 +27,12 @@ export default function RegForm() {
           </div>
           <div className="fs-5 text-center fw-bold mb-4">Student Database</div>
           {!submitted && (
-            <div className={`fw-light`}>
+            <div className={`fw-light text-center`}>
               Please fill the following fields carefully and honestly
             </div>
           )}
           {submitted && (
-            <div className={`fw-light pb-3`}>
+            <div className={`fw-light pb-3 text-center`}>
               You have successfully completed your registration.
             </div>
           )}
