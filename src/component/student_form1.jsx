@@ -13,62 +13,63 @@ export default function Form1({ submisssion, getData }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [submitErrorMes, setSubmitErrorMes] = useState("");
-
   const [formData, setFormData] = useState({
-    surname: "",
-    firstname: "",
-    middlename: "",
-    matric_number: "",
+    last_name: "",
+    first_name: "",
+    middle_name: "",
+    reg_number: "",
     level: "",
-    dob: "",
+    date_of_birth: "",
     gender: "",
     email: "",
-    phone: "",
+    phone_number: "",
     permanent_address: "",
     nationality: "",
     state_of_origin: "",
-    local_government_of_origin: "",
+    lga_of_origin: "",
     accommodation: "",
     residential_address: "",
     religion: "",
     state_of_residence: "",
-    local_government_of_residence: "",
+    lga_of_residence: "",
     guardian_name: "",
     guardian_phone_number: "",
     guardian_email: "",
-    suggestion: "",
-    file: null,
+    feedback: "",
+    passport_image: null,
   });
 
   const [validation, setValidation] = useState({
-    surname: false,
-    firstname: false,
-    middlename: false,
-    matric_number: false,
+    last_name: false,
+    first_name: false,
+    middle_name: false,
+    reg_number: false,
     level: false,
-    dob: false,
+    date_of_birth: false,
     gender: false,
     email: false,
-    phone: false,
+    phone_number: false,
     permanent_address: false,
     nationality: false,
     state_of_origin: false,
-    local_government_of_origin: false,
+    lga_of_origin: false,
     accommodation: false,
     residential_address: false,
     religion: false,
     state_of_residence: false,
-    local_government_of_residence: false,
+    lga_of_residence: false,
     guardian_name: false,
     guardian_phone_number: false,
     guardian_email: false,
-    suggestion: false,
-    file: false,
+    feedback: false,
+    passport_image: false,
   });
 
   useEffect(() => {
     if (Object.values(validation).every((isValid) => isValid)) {
-      setButtonColor(true);
+      if (!submitted) {
+        setButtonColor(true);
+      }
     } else {
       setButtonColor(false);
     }
@@ -76,7 +77,7 @@ export default function Form1({ submisssion, getData }) {
 
   function validateImage(file) {
     //Validate if the file is selected
-    if (!formData.file) {
+    if (!formData.passport_image) {
       setErrorMessage("Please select an image!");
       return false;
     }
@@ -104,8 +105,8 @@ export default function Form1({ submisssion, getData }) {
       img.src = URL.createObjectURL(file);
       img.onload = () => {
         if (
-          (img.width < 50 && img.width > 1000) ||
-          (img.height < 50 && img.height > 1000)
+          (img.width < 100 && img.width > 1000) ||
+          (img.height < 100 && img.height > 1000)
         ) {
           setErrorMessage("Image must be exactly 200x200 pixels.");
           return false;
@@ -133,35 +134,35 @@ export default function Form1({ submisssion, getData }) {
     const image = e.target.files[0];
     setFormData((prev) => ({
       ...prev,
-      file: image,
+      passport_image: image,
     }));
   };
 
   // Validation
   useEffect(() => {
     setValidation({
-      surname: /^[A-Za-z\s'-]{2,50}$/.test(formData.surname),
-      firstname: /^[A-Za-z\s'-]{2,50}$/.test(formData.firstname),
-      middlename: /^[A-Za-z\s'-]{2,50}$/.test(formData.middlename),
-      matric_number: /^\d{4}\/\d{6}$/.test(formData.matric_number),
+      last_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.last_name),
+      first_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.first_name),
+      middle_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.middle_name),
+      reg_number: /^\d{4}\/\d{6}$/.test(formData.reg_number),
       level: /^[0-5]{3}$/.test(formData.level),
-      dob: (() => {
-        const dobDate = new Date(formData.dob);
+      date_of_birth: (() => {
+        const dobDate = new Date(formData.date_of_birth);
         const minDate = new Date("1900-01-01"); // Oldest allowed DOB
         const maxDate = new Date("2010-01-01"); // Today's date (ensuring no future date)
         return dobDate >= minDate && dobDate <= maxDate;
       })(),
       gender: formData.gender === "Male" || formData.gender === "Female",
       email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
-      phone:
-        /^[0-9]{10,15}$/.test(formData.phone) ||
-        /^[+]+[0-9]{10,15}$/.test(formData.phone),
+      phone_number:
+        /^[0-9]{11,15}$/.test(formData.phone_number) ||
+        /^[+]+[0-9]{11,15}$/.test(formData.phone_number),
       permanent_address:
         formData.permanent_address.trim().length >= 5 &&
         formData.permanent_address.trim().length <= 100,
       nationality: formData.nationality !== "",
       state_of_origin: formData.state_of_origin !== "",
-      local_government_of_origin: formData.local_government_of_origin !== "",
+      lga_of_origin: formData.lga_of_origin !== "",
       accommodation:
         formData.accommodation === "Hostel" ||
         formData.accommodation === "Off-Campus",
@@ -170,8 +171,7 @@ export default function Form1({ submisssion, getData }) {
         formData.residential_address.trim().length <= 100,
       religion: formData.religion !== "",
       state_of_residence: formData.state_of_residence !== "",
-      local_government_of_residence:
-        formData.local_government_of_residence !== "",
+      lga_of_residence: formData.lga_of_residence !== "",
       guardian_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.guardian_name),
       guardian_phone_number:
         /^[0-9]{10,15}$/.test(formData.guardian_phone_number) ||
@@ -179,10 +179,10 @@ export default function Form1({ submisssion, getData }) {
       guardian_email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
         formData.guardian_email
       ),
-      suggestion:
-        formData.suggestion.trim().length >= 3 &&
-        formData.suggestion.trim().length <= 300,
-      file: validateImage(formData.file),
+      feedback:
+        formData.feedback.trim().length >= 3 &&
+        formData.feedback.trim().length <= 300,
+      passport_image: validateImage(formData.passport_image),
     });
   }, [formData]);
 
@@ -272,6 +272,9 @@ export default function Form1({ submisssion, getData }) {
 
     (async () => {
       try {
+        if (!state_of_origin) {
+          return;
+        }
         if (state_of_origin === "Foreigner" || nationality !== "Nigeria") {
           setListOfLocalGovtOrigin(["Foreigner"]);
           return;
@@ -319,34 +322,35 @@ export default function Form1({ submisssion, getData }) {
   // Handle Submission Logic
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevents the brouser from clearing the fields after submission
+    e.preventDefault(); // Prevents the browser from clearing the fields after submission
+    setButtonColor(false);
     setSubmitted(true);
     setSubmitError(false);
 
     // Validation Logic
     const newValidation = {
-      surname: /^[A-Za-z\s'-]{2,50}$/.test(formData.surname),
-      firstname: /^[A-Za-z\s'-]{2,50}$/.test(formData.firstname),
-      middlename: /^[A-Za-z\s'-]{2,50}$/.test(formData.middlename),
-      matric_number: /^\d{4}\/\d{6}$/.test(formData.matric_number),
+      last_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.last_name),
+      first_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.first_name),
+      middle_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.middle_name),
+      reg_number: /^\d{4}\/\d{6}$/.test(formData.reg_number),
       level: /^[0-5]{3}$/.test(formData.level),
-      dob: (() => {
-        const dobDate = new Date(formData.dob);
+      date_of_birth: (() => {
+        const dobDate = new Date(formData.date_of_birth);
         const minDate = new Date("1900-01-01");
         const maxDate = new Date("2010-01-01");
         return dobDate >= minDate && dobDate <= maxDate;
       })(),
       gender: formData.gender === "Male" || formData.gender === "Female",
       email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
-      phone:
-        /^[0-9]{10,15}$/.test(formData.phone) ||
-        /^[+]+[0-9]{10,15}$/.test(formData.phone),
+      phone_number:
+        /^[0-9]{10,15}$/.test(formData.phone_number) ||
+        /^[+]+[0-9]{10,15}$/.test(formData.phone_number),
       permanent_address:
         formData.permanent_address.trim().length >= 5 &&
         formData.permanent_address.trim().length <= 100,
       nationality: formData.nationality !== "",
       state_of_origin: formData.state_of_origin !== "",
-      local_government_of_origin: formData.local_government_of_origin !== "",
+      lga_of_origin: formData.lga_of_origin !== "",
       accommodation:
         formData.accommodation === "Hostel" ||
         formData.accommodation === "Off-Campus",
@@ -355,8 +359,7 @@ export default function Form1({ submisssion, getData }) {
         formData.residential_address.trim().length <= 100,
       religion: formData.religion !== "",
       state_of_residence: formData.state_of_residence !== "",
-      local_government_of_residence:
-        formData.local_government_of_residence !== "",
+      lga_of_residence: formData.lga_of_residence !== "",
       guardian_name: /^[A-Za-z\s'-]{2,50}$/.test(formData.guardian_name),
       guardian_phone_number:
         /^[0-9]{10,15}$/.test(formData.guardian_phone_number) ||
@@ -364,20 +367,30 @@ export default function Form1({ submisssion, getData }) {
       guardian_email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
         formData.guardian_email
       ),
-      suggestion:
-        formData.suggestion.trim().length >= 3 &&
-        formData.suggestion.trim().length <= 300,
-      file: validateImage(formData.file),
+      feedback:
+        formData.feedback.trim().length >= 3 &&
+        formData.feedback.trim().length <= 300,
+      passport_image: validateImage(formData.passport_image),
     };
 
     setValidation(newValidation);
 
+    const updatedForm = {
+      ...formData,
+      ["phone"]: formData.phone_number.startsWith("+")
+        ? Number("0" + formData.phone_number.slice(4))
+        : Number(formData.phone_number),
+      ["guardian_phone_number"]: formData.guardian_phone_number.startsWith("+")
+        ? Number("0" + formData.guardian_phone_number.slice(4))
+        : Number(formData.guardian_phone_number),
+    };
+
     const form = new FormData();
 
-    for (let key in formData) {
-      form.append(key, formData[key]);
+    for (let key in updatedForm) {
+      form.append(key, updatedForm[key]);
     }
-    // Check if form is valid
+    // Check if form is valid 🔍😒
     try {
       if (Object.values(newValidation).every((isValid) => isValid)) {
         const controller = new AbortController();
@@ -386,23 +399,31 @@ export default function Form1({ submisssion, getData }) {
           setSubmitted(false);
           setSubmitError(true); // Shows us an Error below the submit button
           setSubmitErrorMes("Unable to submit data. Please try again."); // Error Message
+          setButtonColor(true);
         }, 20000);
         // API endpoint for the form.
         // Do not use '/registration' as your end point [If you must go to vite.config.js file and comment out the server field before building]
-        const response = await fetch("/registration", {
-          method: "POST",
-          body: form,
-        });
+        const response = await fetch(
+          "https://ece-unn-db-backend-main.onrender.com/api/create/student",
+          {
+            method: "POST",
+            body: form,
+            signal: controller.signal,
+          }
+        );
         // Response data must have identical fields to that of the request and must all be strings.
         // The file URL location of the file(image) in the CDN must be returned
-        clearTimeout(timeout);
+
         if (!response) {
           //throw new Error("Error submitting data");
           setSubmitError(true); // Shows us an Error below the submit button
           setSubmitErrorMes("Unable to submit data. Please try again."); // Error Message
         }
         const data = await response.json();
-        getData(data);
+        clearTimeout(timeout);
+        const { student } = data;
+
+        getData(student);
         submisssion(true);
       } else {
         alert("Please fill out all required fields."); // this is basically useless 😂
@@ -424,10 +445,10 @@ export default function Form1({ submisssion, getData }) {
             Surname
           </label>
           <input
-            name="surname"
+            name="last_name"
             type="text"
             className={`form-control ${
-              validation.surname ? "is-valid" : "is-invalid"
+              validation.last_name ? "is-valid" : "is-invalid"
             }`}
             id="validationSurname"
             onChange={handleChange}
@@ -443,10 +464,10 @@ export default function Form1({ submisssion, getData }) {
             First Name
           </label>
           <input
-            name="firstname"
+            name="first_name"
             type="text"
             className={`form-control ${
-              validation.firstname ? "is-valid" : "is-invalid"
+              validation.first_name ? "is-valid" : "is-invalid"
             }`}
             id="validationFirstname"
             onChange={handleChange}
@@ -462,10 +483,10 @@ export default function Form1({ submisssion, getData }) {
             Middle Name
           </label>
           <input
-            name="middlename"
+            name="middle_name"
             type="text"
             className={`form-control ${
-              validation.middlename ? "is-valid" : "is-invalid"
+              validation.middle_name ? "is-valid" : "is-invalid"
             }`}
             id="validationMiddlename"
             onChange={handleChange}
@@ -480,10 +501,10 @@ export default function Form1({ submisssion, getData }) {
             Matric Number
           </label>
           <input
-            name="matric_number"
+            name="reg_number"
             type="text"
             className={`form-control ${
-              validation.matric_number ? "is-valid" : "is-invalid"
+              validation.reg_number ? "is-valid" : "is-invalid"
             }`}
             id="validationRegNumber"
             onChange={handleChange}
@@ -503,7 +524,7 @@ export default function Form1({ submisssion, getData }) {
             className={`form-select ${
               validation.level ? "is-valid" : "is-invalid"
             }`}
-            id="validationCountry"
+            id="validationLevel"
             onChange={handleChange}
             required
           >
@@ -524,10 +545,10 @@ export default function Form1({ submisssion, getData }) {
             Date of Birth
           </label>
           <input
-            name="dob"
+            name="date_of_birth"
             type="date"
             className={`form-control ${
-              validation.dob ? "is-valid" : "is-invalid"
+              validation.date_of_birth ? "is-valid" : "is-invalid"
             }`}
             id="validationDob"
             onChange={handleChange}
@@ -611,12 +632,12 @@ export default function Form1({ submisssion, getData }) {
             Phone Number
           </label>
           <input
-            name="phone"
+            name="phone_number"
             type="tel"
             className={`form-control ${
-              validation.phone ? "is-valid" : "is-invalid"
+              validation.phone_number ? "is-valid" : "is-invalid"
             }`}
-            id="validationPhone"
+            id="validationPhoneNumber"
             onChange={handleChange}
             required
           />
@@ -635,7 +656,7 @@ export default function Form1({ submisssion, getData }) {
             className={`form-control ${
               validation.permanent_address ? "is-valid" : "is-invalid"
             }`}
-            id="validationAddress"
+            id="validationPermanentAddress"
             onChange={handleChange}
             required
           />
@@ -678,7 +699,7 @@ export default function Form1({ submisssion, getData }) {
             className={`form-select ${
               validation.state_of_origin ? "is-valid" : "is-invalid"
             }`}
-            id="validationState"
+            id="validationStateOrigin"
             onChange={handleChange}
             required
           >
@@ -699,11 +720,11 @@ export default function Form1({ submisssion, getData }) {
             Local Government of Origin
           </label>
           <select
-            name="local_government_of_origin"
+            name="lga_of_origin"
             className={`form-select ${
-              validation.local_government_of_origin ? "is-valid" : "is-invalid"
+              validation.lga_of_origin ? "is-valid" : "is-invalid"
             }`}
-            id="validationCountry"
+            id="validationLGAOrigin"
             onChange={handleChange}
             required
           >
@@ -779,7 +800,7 @@ export default function Form1({ submisssion, getData }) {
             className={`form-control ${
               validation.residential_address ? "is-valid" : "is-invalid"
             }`}
-            id="validationAddress"
+            id="validationResidentialAddress"
             onChange={handleChange}
             required
           />
@@ -823,7 +844,7 @@ export default function Form1({ submisssion, getData }) {
             className={`form-select ${
               validation.state_of_residence ? "is-valid" : "is-invalid"
             }`}
-            id="validationCountry"
+            id="validationStateResidence"
             onChange={handleChange}
             required
           >
@@ -844,13 +865,11 @@ export default function Form1({ submisssion, getData }) {
             Local Government of Residence
           </label>
           <select
-            name="local_government_of_residence"
+            name="lga_of_residence"
             className={`form-select ${
-              validation.local_government_of_residence
-                ? "is-valid"
-                : "is-invalid"
+              validation.lga_of_residence ? "is-valid" : "is-invalid"
             }`}
-            id="validationCountry"
+            id="validationLGAResidence"
             onChange={handleChange}
             required
           >
@@ -931,10 +950,10 @@ export default function Form1({ submisssion, getData }) {
             Upload Passport Image (Max 2MB)
           </label>
           <input
-            name="file"
+            name="passport_image"
             type="file"
             className={`form-control ${
-              validation.file ? "is-valid" : "is-invalid"
+              validation.passport_image ? "is-valid" : "is-invalid"
             }`}
             id="imageUpload"
             accept="image/*"
@@ -954,10 +973,10 @@ export default function Form1({ submisssion, getData }) {
           </label>
           <textarea
             rows={6}
-            name="suggestion"
+            name="feedback"
             type="text"
             className={`form-control ${classes.height} ${
-              validation.suggestion ? "is-valid" : "is-invalid"
+              validation.feedback ? "is-valid" : "is-invalid"
             }`}
             id="validationSuggestion"
             onChange={handleChange}
@@ -981,7 +1000,7 @@ export default function Form1({ submisssion, getData }) {
               "Submit"
             ) : (
               <div
-                class={`spinner-border text-success ${classes.smallSpinner}`}
+                class={`spinner-border text-secondary ${classes.smallSpinner}`}
                 role="status"
               ></div>
             )}
@@ -999,26 +1018,26 @@ export default function Form1({ submisssion, getData }) {
 
 /*
 LIST OF FIELDS
-surname (String)
-firstname (String)
-middlename (String)
-matric_number (String)
+last_name (String)
+first_name (String)
+middle_name (String)
+reg_number (String)
 level (String)
-dob (String)
+date_of_birth (String)
 gender (String)
 email (String)
-phone (String)
+phone_number (Number)
 permanent_address (String)
 nationality (String)
 state_of_origin (String)
-local_government_of_origin (String)
+lga_of_origin (String)
 accommodation (String)
 residential_address (String)
 religion (String)
 state_of_residence (String)
-local_government_of_residence (String)
+lga_of_residence (String)
 guardian_name (String)
-guardian_phone_number (String)
+guardian_phone_number (Number)
 guardian_email (String)
 suggestion (String)
 file (Image)
