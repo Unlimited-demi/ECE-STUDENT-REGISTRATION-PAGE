@@ -62,7 +62,7 @@ export default function Registration({ savedData }) {
         </div>
         <hr className={`my-2 ${classes.lineColor}`} />
         <div className={`col-md-12 ${classes.fontSize1}`}>
-          <b>Date of Birth:</b> {date_of_birth}
+          <b>Date of Birth:</b> {date_of_birth.slice(0, 10)}
         </div>
         <hr className={`my-2 ${classes.lineColor}`} />
         <div className={`col-md-12 ${classes.fontSize1}`}>
