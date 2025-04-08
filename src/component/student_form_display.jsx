@@ -4,6 +4,13 @@ import classes from "../component_css/sign_in_page.module.css";
 import myImage from "../assets/Picture5.png";
 
 export default function Registration({ savedData }) {
+  function convertDate(dateStr) {
+    const date = new Date(dateStr); // input is already in ISO format
+
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    return date.toLocaleDateString("en-GB", options); // e.g., "20 January 2020"
+  }
+
   const {
     last_name,
     first_name,
@@ -62,7 +69,7 @@ export default function Registration({ savedData }) {
         </div>
         <hr className={`my-2 ${classes.lineColor}`} />
         <div className={`col-md-12 ${classes.fontSize1}`}>
-          <b>Date of Birth:</b> {date_of_birth.slice(0, 10)}
+          <b>Date of Birth:</b> {convertDate(date_of_birth.slice(0, 10))}
         </div>
         <hr className={`my-2 ${classes.lineColor}`} />
         <div className={`col-md-12 ${classes.fontSize1}`}>
