@@ -26,7 +26,8 @@ export default function Registration({ savedData }) {
     guardian_name,
     guardian_phone_number,
     guardian_email,
-    passport_image, // The file URL
+    passport_url,
+    // The file URL
   } = savedData;
 
   return (
@@ -34,7 +35,7 @@ export default function Registration({ savedData }) {
       <div className={`row mx-5 gy-3 px-5 ${classes.box}`}>
         <div className="col-md-12 text-center pb-4 pt-4">
           <img
-            src={!passport_image ? myImage : passport_image}
+            src={!passport_url ? myImage : passport_url}
             className={`rounded-circle ${classes.imgBorder}`}
             alt="Uploaded Preview"
             style={{ width: "170px", height: "170px", objectFit: "cover" }}

@@ -377,7 +377,7 @@ export default function Form1({ submisssion, getData }) {
 
     const updatedForm = {
       ...formData,
-      ["phone"]: formData.phone_number.startsWith("+")
+      ["phone_number"]: formData.phone_number.startsWith("+")
         ? Number("0" + formData.phone_number.slice(4))
         : Number(formData.phone_number),
       ["guardian_phone_number"]: formData.guardian_phone_number.startsWith("+")
@@ -387,9 +387,10 @@ export default function Form1({ submisssion, getData }) {
 
     const form = new FormData();
 
-    for (let key in updatedForm) {
+    for (const key in updatedForm) {
       form.append(key, updatedForm[key]);
     }
+
     // Check if form is valid 🔍😒
     try {
       if (Object.values(newValidation).every((isValid) => isValid)) {
@@ -403,7 +404,9 @@ export default function Form1({ submisssion, getData }) {
         }, 20000);
         // API endpoint for the form.
         // Do not use '/registration' as your end point [If you must go to vite.config.js file and comment out the server field before building]
+
         const response = await fetch(
+          //https://ece-unn-db-backend-main.onrender.com/api/create/student
           "https://ece-unn-db-backend-main.onrender.com/api/create/student",
           {
             method: "POST",
@@ -419,11 +422,15 @@ export default function Form1({ submisssion, getData }) {
           setSubmitError(true); // Shows us an Error below the submit button
           setSubmitErrorMes("Unable to submit data. Please try again."); // Error Message
         }
-        const data = await response.json();
-        clearTimeout(timeout);
-        const { student } = data;
+        // const check = await response.text();
+        // console.log(check);
 
+        const ServerRes = await response.json();
+
+        const { student } = ServerRes.data;
+        clearTimeout(timeout);
         getData(student);
+        //console.log(student);
         submisssion(true);
       } else {
         alert("Please fill out all required fields."); // this is basically useless 😂
@@ -969,7 +976,7 @@ export default function Form1({ submisssion, getData }) {
         {/* Suggestions */}
         <div className={`col-md-12`}>
           <label htmlFor="validationSuggestion" className="form-label">
-            Suggestions for the Department
+            {"Suggestions for the Department (Anonymous Feedback)"}
           </label>
           <textarea
             rows={6}
@@ -984,7 +991,7 @@ export default function Form1({ submisssion, getData }) {
           />
           <div className="valid-feedback">Good!</div>
           <div className="invalid-feedback">
-            Write a suggestion for the Department!
+            Write a feedback or suggestion for the Department!
           </div>
         </div>
 
