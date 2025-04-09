@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import classes from "../component_css/sign_in_page.module.css";
 
-export default function Form1({ submisssion, getData }) {
+export default function Form1({
+  submisssion,
+  getData,
+  getErrorMes,
+  getError,
+  isOnline,
+}) {
   const [listOfState, setListOfState] = useState([]);
   const [listOfStateOrigin, setListOfStateOrigin] = useState([]);
   const [listOfLocalGovtOrigin, setListOfLocalGovtOrigin] = useState([]);
@@ -180,8 +186,8 @@ export default function Form1({ submisssion, getData }) {
         formData.guardian_email
       ),
       feedback:
-        formData.feedback.trim().length >= 3 &&
-        formData.feedback.trim().length <= 300,
+        formData.feedback.trim().length >= 5 &&
+        formData.feedback.trim().length <= 1000,
       passport_image: validateImage(formData.passport_image),
     });
   }, [formData]);
@@ -209,7 +215,7 @@ export default function Form1({ submisssion, getData }) {
     })();
 
     return () => controller.abort();
-  }, []);
+  }, [isOnline]);
 
   // State of Origin
   useEffect(() => {
@@ -239,7 +245,7 @@ export default function Form1({ submisssion, getData }) {
     })();
 
     return () => controller.abort();
-  }, [formData.nationality]);
+  }, [formData.nationality, isOnline]);
 
   // State of Residence
   useEffect(() => {
@@ -261,7 +267,7 @@ export default function Form1({ submisssion, getData }) {
     })();
 
     return () => controller.abort();
-  }, []);
+  }, [isOnline]);
 
   // Local Government of Origin
   useEffect(() => {
@@ -295,7 +301,7 @@ export default function Form1({ submisssion, getData }) {
     })();
 
     return () => controller.abort();
-  }, [formData.state_of_origin, formData.nationality]);
+  }, [formData.state_of_origin, formData.nationality, isOnline]);
 
   // Local Government of Residence
   useEffect(() => {
@@ -317,15 +323,21 @@ export default function Form1({ submisssion, getData }) {
     })();
 
     return () => controller.abort();
-  }, [formData.state_of_residence]);
+  }, [formData.state_of_residence, isOnline]);
+
+  // Handle Error Message
+  useEffect(() => {
+    getErrorMes(submitErrorMes);
+    getError(submitError);
+  }, [submitErrorMes, submitError]);
 
   // Handle Submission Logic
-
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevents the browser from clearing the fields after submission
     setButtonColor(false);
     setSubmitted(true);
     setSubmitError(false);
+    setSubmitErrorMes([]);
 
     // Validation Logic
     const newValidation = {
@@ -368,8 +380,8 @@ export default function Form1({ submisssion, getData }) {
         formData.guardian_email
       ),
       feedback:
-        formData.feedback.trim().length >= 3 &&
-        formData.feedback.trim().length <= 300,
+        formData.feedback.trim().length >= 5 &&
+        formData.feedback.trim().length <= 1000,
       passport_image: validateImage(formData.passport_image),
     };
 
@@ -405,6 +417,13 @@ export default function Form1({ submisssion, getData }) {
         // API endpoint for the form.
         // Do not use '/registration' as your end point [If you must go to vite.config.js file and comment out the server field before building]
 
+        if (!navigator.onLine) {
+          setSubmitted(false);
+          setSubmitError(true); // Shows us an Error below the submit button
+          setSubmitErrorMes(["Couldnt connect to the server."]); // Error Message
+          clearTimeout(timeout);
+          setButtonColor(true);
+        }
         const response = await fetch(
           //https://ece-unn-db-backend-main.onrender.com/api/create/student
           "https://ece-unn-db-backend-main.onrender.com/api/create/student",
@@ -418,25 +437,35 @@ export default function Form1({ submisssion, getData }) {
         // The file URL location of the file(image) in the CDN must be returned
 
         if (!response) {
-          //throw new Error("Error submitting data");
-
+          clearTimeout(timeout);
+          setSubmitted(false);
           setSubmitError(true); // Shows us an Error below the submit button
           setSubmitErrorMes(["No response from server"]); // Error Message
+          setButtonColor(true);
         }
         // const check = await response.text();
         // console.log(check);
 
         const ServerRes = await response.json();
+
+        if (ServerRes.status === "failed") {
+          clearTimeout(timeout);
+          setSubmitted(false);
+          setSubmitError(true); // Shows us an Error below the submit button
+          setSubmitErrorMes([ServerRes.message]); // Error Message
+          setButtonColor(true);
+        }
+
         if (ServerRes.errors) {
           const { errors } = ServerRes;
           let list = [];
           for (let key in errors) {
             list.push(errors[key][0]);
           }
+          clearTimeout(timeout);
           setSubmitted(false);
           setSubmitError(true); // Shows us an Error below the submit button
-          setSubmitErrorMes(list); // Error Message
-          clearTimeout(timeout);
+          setSubmitErrorMes([...list]); // Error Message
           setButtonColor(true);
         }
         const { student } = ServerRes.data;
@@ -1001,10 +1030,20 @@ export default function Form1({ submisssion, getData }) {
             onChange={handleChange}
             required
           />
-          <div className="valid-feedback">Good!</div>
-          <div className="invalid-feedback">
-            Write a feedback or suggestion for the Department!
-          </div>
+
+          {validation.feedback && (
+            <div className="valid-feedback d-flex">
+              Good!
+              <div className="ms-auto">{formData.feedback.length}/1000</div>
+            </div>
+          )}
+
+          {!validation.feedback && (
+            <div className="invalid-feedback d-flex">
+              Write a feedback or suggestion for the Department!
+              <div className="ms-auto">{formData.feedback.length}/1000</div>
+            </div>
+          )}
         </div>
 
         {/* Submit Button */}
@@ -1024,12 +1063,6 @@ export default function Form1({ submisssion, getData }) {
               ></div>
             )}
           </button>
-          {submitError &&
-            submitErrorMes.map((err) => {
-              return (
-                <div className={` col-12 ${classes.errorMessage}`}>{err}</div>
-              );
-            })}
         </div>
       </form>
     </>

@@ -6,9 +6,56 @@ import myImage from "../assets/Picture1.png";
 import Form1 from "../component/student_form1";
 import Registration from "../component/student_form_display";
 
+function AlertMessage({ onLine, error, errorMes, isSubmited, removeError }) {
+  return (
+    <div className={`${classes.alert}`}>
+      {!onLine && !isSubmited && (
+        <div className={`alert alert-danger text-center`} role="alert">
+          No Internet Connection: Please check your internet connection.
+        </div>
+      )}
+      {error &&
+        !isSubmited &&
+        errorMes.map((mes, index) => (
+          <div
+            key={index}
+            className="alert alert-warning alert-dismissible fade show text-center"
+            role="alert"
+          >
+            {mes}
+            <button
+              type="button"
+              className={`btn-close ${classes.closeBtn}`}
+              onClick={() => {
+                removeError(index);
+              }}
+              aria-label="Close"
+            ></button>
+          </div>
+        ))}
+    </div>
+  );
+}
+
 export default function RegForm() {
   const [submitted, setSubmitted] = useState(false);
   const [returnedData, setReturnedData] = useState({});
+  const [submitError, setSubmitError] = useState(false);
+  const [submitErrorMes, setSubmitErrorMes] = useState([]);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   return (
     <>
@@ -48,10 +95,30 @@ export default function RegForm() {
               getData={(data) => {
                 setReturnedData(data);
               }}
+              getErrorMes={(data) => {
+                setSubmitErrorMes(data);
+              }}
+              getError={(data) => {
+                setSubmitError(data);
+              }}
+              isOnline={isOnline}
             />
           )}
           {submitted && <Registration savedData={returnedData} />}
         </div>
+        <AlertMessage
+          onLine={isOnline}
+          error={submitError}
+          errorMes={[...submitErrorMes]}
+          isSubmited={submitted}
+          removeError={(index) => {
+            setSubmitErrorMes((prev) => {
+              const newMes = [...prev];
+              newMes.splice(index, 1);
+              return newMes;
+            });
+          }}
+        />
       </div>
     </>
   );

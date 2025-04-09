@@ -138,3 +138,17 @@
         padding: 0;
     }
 }
+.alert {
+    position: fixed;
+    width: 80%;
+    min-height: 20vh;
+    top: 20px;
+    left: 50%;
+    font-size: 1rem;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+.closeBtn:focus, .closeBtn:focus-visible, .closeBtn:focus-within {
+    box-shadow: none !important;
+    outline: none !important;
+}
