@@ -11,7 +11,7 @@ function AlertMessage({ onLine, error, errorMes, isSubmited, removeError }) {
     <div className={`${classes.alert}`}>
       {!onLine && !isSubmited && (
         <div className={`alert alert-danger text-center`} role="alert">
-          No Internet Connection: Please check your internet connection.
+          No Internet Connection.
         </div>
       )}
       {error &&
