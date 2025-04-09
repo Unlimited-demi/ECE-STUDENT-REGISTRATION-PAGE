@@ -12,7 +12,7 @@ export default function RegForm() {
 
   return (
     <>
-      <div className="container pb-5 px-5">
+      <div className="container pb-5 px-3 px-md-3">
         <div className="container d-flex flex-column align-items-center mb-4 mt-3">
           <div className={`d-flex px-0 mb-4`}>
             <img

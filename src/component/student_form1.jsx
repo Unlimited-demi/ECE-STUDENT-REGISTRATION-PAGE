@@ -12,7 +12,7 @@ export default function Form1({ submisssion, getData }) {
   const [buttonColor, setButtonColor] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-  const [submitErrorMes, setSubmitErrorMes] = useState("");
+  const [submitErrorMes, setSubmitErrorMes] = useState([]);
   const [formData, setFormData] = useState({
     last_name: "",
     first_name: "",
@@ -399,9 +399,9 @@ export default function Form1({ submisssion, getData }) {
           controller.abort();
           setSubmitted(false);
           setSubmitError(true); // Shows us an Error below the submit button
-          setSubmitErrorMes("Unable to submit data. Please try again."); // Error Message
+          setSubmitErrorMes(["Unable to submit data. Please try again."]); // Error Message
           setButtonColor(true);
-        }, 20000);
+        }, 25000);
         // API endpoint for the form.
         // Do not use '/registration' as your end point [If you must go to vite.config.js file and comment out the server field before building]
 
@@ -419,14 +419,26 @@ export default function Form1({ submisssion, getData }) {
 
         if (!response) {
           //throw new Error("Error submitting data");
+
           setSubmitError(true); // Shows us an Error below the submit button
-          setSubmitErrorMes("Unable to submit data. Please try again."); // Error Message
+          setSubmitErrorMes(["No response from server"]); // Error Message
         }
         // const check = await response.text();
         // console.log(check);
 
         const ServerRes = await response.json();
-
+        if (ServerRes.errors) {
+          const { errors } = ServerRes;
+          let list = [];
+          for (let key in errors) {
+            list.push(errors[key][0]);
+          }
+          setSubmitted(false);
+          setSubmitError(true); // Shows us an Error below the submit button
+          setSubmitErrorMes(list); // Error Message
+          clearTimeout(timeout);
+          setButtonColor(true);
+        }
         const { student } = ServerRes.data;
         clearTimeout(timeout);
         getData(student);
@@ -1012,11 +1024,12 @@ export default function Form1({ submisssion, getData }) {
               ></div>
             )}
           </button>
-          {submitError && (
-            <div className={` col-12 ${classes.errorMessage}`}>
-              {submitErrorMes}
-            </div>
-          )}
+          {submitError &&
+            submitErrorMes.map((err) => {
+              return (
+                <div className={` col-12 ${classes.errorMessage}`}>{err}</div>
+              );
+            })}
         </div>
       </form>
     </>

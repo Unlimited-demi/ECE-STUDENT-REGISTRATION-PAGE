@@ -39,7 +39,7 @@ export default function Registration({ savedData }) {
 
   return (
     <>
-      <div className={`row mx-5 gy-3 px-5 ${classes.box}`}>
+      <div className={`row mx-2 gy-3 px-5 mx-md-5 ${classes.box}`}>
         <div className="col-md-12 text-center pb-4 pt-4">
           <img
             src={!passport_url ? myImage : passport_url}
