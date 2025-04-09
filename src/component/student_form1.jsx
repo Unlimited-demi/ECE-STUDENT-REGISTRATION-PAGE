@@ -401,7 +401,7 @@ export default function Form1({ submisssion, getData }) {
           setSubmitError(true); // Shows us an Error below the submit button
           setSubmitErrorMes(["Unable to submit data. Please try again."]); // Error Message
           setButtonColor(true);
-        }, 25000);
+        }, 30000);
         // API endpoint for the form.
         // Do not use '/registration' as your end point [If you must go to vite.config.js file and comment out the server field before building]
 
