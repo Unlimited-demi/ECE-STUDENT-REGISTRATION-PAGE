@@ -420,7 +420,7 @@ export default function Form1({
         if (!navigator.onLine) {
           setSubmitted(false);
           setSubmitError(true); // Shows us an Error below the submit button
-          setSubmitErrorMes(["Couldnt connect to the server."]); // Error Message
+          setSubmitErrorMes(["Can't connect to the server."]); // Error Message
           clearTimeout(timeout);
           setButtonColor(true);
         }
@@ -448,12 +448,16 @@ export default function Form1({
 
         const ServerRes = await response.json();
 
-        if (ServerRes.status === "failed") {
+        if (
+          ServerRes.hasOwnProperty("status") &&
+          ServerRes["status"] == "failed"
+        ) {
           clearTimeout(timeout);
           setSubmitted(false);
           setSubmitError(true); // Shows us an Error below the submit button
           setSubmitErrorMes([ServerRes.message]); // Error Message
           setButtonColor(true);
+          return;
         }
 
         if (ServerRes.errors) {
@@ -467,6 +471,7 @@ export default function Form1({
           setSubmitError(true); // Shows us an Error below the submit button
           setSubmitErrorMes([...list]); // Error Message
           setButtonColor(true);
+          return;
         }
         const { student } = ServerRes.data;
         clearTimeout(timeout);
